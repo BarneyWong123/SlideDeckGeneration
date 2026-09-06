@@ -1,7 +1,7 @@
 {
   "artboards": [
-    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1200, "h": 1720, "title": "Foundations", "print": "fixed" },
-    { "file": "Components.dc.html", "x": 1320, "y": 0, "w": 1200, "h": 1360, "title": "Components", "print": "fixed" },
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1200, "h": 1900, "title": "Foundations", "print": "fixed" },
+    { "file": "Components.dc.html", "x": 1320, "y": 0, "w": 1200, "h": 1560, "title": "Components", "print": "fixed" },
     { "file": "Application.dc.html", "x": 2640, "y": 0, "w": 1440, "h": 900, "title": "In application", "print": "fixed" }
   ],
   "annotations": [
