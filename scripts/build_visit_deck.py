@@ -197,6 +197,85 @@ def footer(slide, note):
     text(slide, 0.5, 7.16, 12.4, 0.24, [(note, 8.5, False, GREY600)])
 
 
+def table(slide, x, y, w, col_w, rows_data, header_row, row_h=0.30, head_h=0.32,
+          font_size=9.5, align_right_from=1):
+    """Branded table: dark blue header, hairline rules, no banding."""
+    n_rows, n_cols = len(rows_data) + 1, len(header_row)
+    shape = slide.shapes.add_table(n_rows, n_cols, Inches(x), Inches(y),
+                                   Inches(w), Inches(head_h + row_h * len(rows_data)))
+    tbl = shape.table
+    tbl.first_row = False
+    tbl.horz_banding = False
+    for c, cw in enumerate(col_w):
+        tbl.columns[c].width = Inches(cw)
+    tbl.rows[0].height = Inches(head_h)
+    for r in range(1, n_rows):
+        tbl.rows[r].height = Inches(row_h)
+
+    for c, label in enumerate(header_row):
+        cell = tbl.cell(0, c)
+        cell.fill.solid()
+        cell.fill.fore_color.rgb = DARK
+        cell.margin_left = cell.margin_right = Inches(0.08)
+        cell.vertical_anchor = MSO_ANCHOR.MIDDLE
+        p_ = cell.text_frame.paragraphs[0]
+        p_.alignment = PP_ALIGN.LEFT if c < align_right_from else PP_ALIGN.RIGHT
+        run = p_.add_run()
+        run.text = label
+        run.font.size = Pt(8.5)
+        run.font.bold = True
+        run.font.name = FONT
+        run.font.color.rgb = WHITE
+
+    for r, row in enumerate(rows_data, start=1):
+        emphasise = isinstance(row, tuple)
+        cells = row[1] if emphasise else row
+        style = row[0] if emphasise else None
+        for c, val in enumerate(cells):
+            cell = tbl.cell(r, c)
+            cell.fill.solid()
+            cell.fill.fore_color.rgb = BLUE50 if style == "total" else WHITE
+            cell.margin_left = cell.margin_right = Inches(0.08)
+            cell.margin_top = cell.margin_bottom = 0
+            cell.vertical_anchor = MSO_ANCHOR.MIDDLE
+            p_ = cell.text_frame.paragraphs[0]
+            p_.alignment = PP_ALIGN.LEFT if c < align_right_from else PP_ALIGN.RIGHT
+            run = p_.add_run()
+            run.text = str(val)
+            run.font.size = Pt(font_size)
+            run.font.bold = style == "total"
+            run.font.name = FONT
+            colour = GREY800
+            if style != "total" and c >= align_right_from:
+                if str(val).startswith(MINUS):
+                    colour = DANGER
+                elif str(val).startswith("+"):
+                    colour = SUCCESS
+            run.font.color.rgb = DARK if style == "total" else colour
+    return shape
+
+
+def points(slide, x, y, w, h, heading, items):
+    """Bottom 'what to ask' strip: heading plus evenly spaced numbered points."""
+    box(slide, x, y, w, h, fill=WHITE, line=GREY200, radius=0.05)
+    text(slide, x + 0.24, y + 0.16, w - 0.48, 0.22, [(heading.upper(), 9, True, GREY600)])
+    col_w = (w - 0.48) / len(items)
+    for n, (lead, body) in enumerate(items):
+        cx = x + 0.24 + n * col_w
+        text(slide, cx, y + 0.44, col_w - 0.24, h - 0.60,
+             [[(lead, 10.5, True, DARK)], [(body, 9.5, False, GREY800)]], spacing=1.22)
+
+
+MINUS = "\u2212"
+
+
+def delta_str(v):
+    if round(v) == 0:
+        return "—"
+    sign = "+" if v > 0 else MINUS
+    return f"{sign}{abs(v):,.0f}"
+
+
 # --- slide 1: Hospital Umum Sarawak ----------------------------------------------
 def slide_hus(prs, rows):
     hus = [r for r in rows if "HOSPITAL UMUM SARAWAK" in r["ship"]]
@@ -319,9 +398,9 @@ def slide_hus(prs, rows):
 
 # --- slide 2: PIL Kuching (Timberland) -------------------------------------------
 ASSAYS = [
-    ("H. pylori IgG", "H.PYLORI", "100 tests/kit"),
-    ("EBV VCA IgG", "EBV", "—"),
-    ("ANA Screen", "ANA SCREEN", "50 tests/kit"),
+    ("H. pylori IgG", "H.PYLORI", 100),
+    ("EBV VCA IgG", "EBV", None),
+    ("ANA Screen", "ANA SCREEN", 50),
 ]
 
 
@@ -424,12 +503,156 @@ def slide_pil(prs, rows):
               "Labs Sdn Bhd. No SNIBE orders in Jan 2026; Sep 2026 part-month excluded.")
 
 
+# --- slide 2: Hospital Umum Sarawak, detail ---------------------------------------
+def slide_hus_detail(prs, rows):
+    hus = [r for r in rows if "HOSPITAL UMUM SARAWAK" in r["ship"]]
+    tx = [r for r in hus if r["brand"] in TRANSFUSION]
+
+    agg = collections.defaultdict(lambda: [0.0, 0.0, 0.0, 0.0])
+    for r in tx:
+        v = agg[(r["brand"], r["group"])]
+        v[0 if r["fy"] == "FY26" else 1] += r["amt"]
+        if r["month"] in LFL_FY26:
+            v[2] += r["amt"]
+        elif r["month"] in LFL_FY27:
+            v[3] += r["amt"]
+    lines = sorted(((k, v) for k, v in agg.items() if any(v)), key=lambda x: -x[1][0])
+
+    s = prs.slides.add_slide(prs.slide_layouts[6])
+    header(s, "Hospital Umum Sarawak · detail", "Where the money moved, line by line",
+           ["Bio-Rad + Werfen Immucor",
+            "RM · FY26 full year, FY27 to 4 Sep 2026"])
+
+    text(s, 0.5, 1.12, 7.0, 0.22,
+         [("TRANSFUSION LINES", 9, True, GREY600)])
+    body = []
+    for (brand, group), v in lines:
+        body.append([GROUP_LABELS.get(group, str(group).title()),
+                     money(v[0]), money(v[1]), money(v[2]), money(v[3]),
+                     delta_str(v[3] - v[2])])
+    tot = [sum(v[i] for _, v in lines) for i in range(4)]
+    body.append(("total", ["Transfusion total", money(tot[0]), money(tot[1]),
+                           money(tot[2]), money(tot[3]), delta_str(tot[3] - tot[2])]))
+    table(s, 0.5, 1.40, 7.0, [2.15, 1.02, 0.97, 0.97, 0.97, 0.92], body,
+          ["Line", "FY26 full", "FY27 YTD", "May–Aug 26*", "May–Aug 27", "Δ LFL"])
+
+    # ID cards timing
+    text(s, 7.85, 1.12, 4.98, 0.22,
+         [("BIO-RAD ID CARDS — WHEN THE BIG DRAWS LAND (RM)", 9, True, GREY600)])
+    cd = CategoryChartData()
+    cd.categories = [datetime.datetime.strptime(m, "%Y-%m").strftime("%b %y") for m in MONTHS]
+    cd.add_series("ID cards", tuple(
+        sum(r["amt"] for r in tx if r["month"] == m and r["group"] == "DM-ID CARDS")
+        for m in MONTHS))
+    gf = s.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED, Inches(7.85), Inches(1.40),
+                            Inches(4.98), Inches(2.55), cd)
+    ch = gf.chart
+    ch.has_legend = False
+    ch.plots[0].gap_width = 45
+    ch.series[0].format.fill.solid()
+    ch.series[0].format.fill.fore_color.rgb = DARK
+    style_chart(ch, cat_size=8)
+
+    box(s, 7.85, 4.08, 4.98, 1.42, fill=SKY100, line=GREY200, radius=0.05)
+    text(s, 8.09, 4.24, 4.5, 1.10,
+         [[("Read the drop carefully.", 11, True, DARK)],
+          [("Cards are drawn in a few big lumps — Aug–Oct 2025, then Feb and Apr 2026 — "
+            "not monthly. FY27's equivalent draws have not happened yet, so part of the "
+            "May–Aug gap is timing, not lost share.", 9.5, False, GREY800)]], spacing=1.22)
+
+    points(s, 0.5, 5.62, 12.333, 1.28, "What to ask", [
+        ("When is the next card draw?",
+         "Aug–Oct is the pattern. Confirming the schedule tells you whether FY27 is behind "
+         "or simply not drawn yet."),
+        ("Werfen DBL reagent stopped.",
+         "RM 8,820 in May–Aug FY26, nothing since. Worth finding out whether that testing "
+         "moved, paused or went elsewhere."),
+        ("ID reagent and QC are up.",
+         "+RM 10,063 and +RM 3,502 like-for-like — routine consumption is healthy, which "
+         "supports the timing reading."),
+    ])
+
+    footer(s, "* May–Aug FY26 is shown so the four months of FY27 are compared against the "
+              "same four months, not against a full year. Source: SAP AR invoice export, "
+              "ship-to Hospital Umum Sarawak.")
+
+
+# --- slide 4: PIL Kuching, detail -------------------------------------------------
+def slide_pil_detail(prs, rows):
+    tim = [r for r in rows if "TIMBERLAND" in r["ship"]]
+    sn = [r for r in tim if r["brand"] == "SNIBE"]
+
+    def kits(key, months=None, fy=None):
+        return sum(r["qty"] for r in sn if key in r["product"].upper() and r["amt"] > 0
+                   and (fy is None or r["fy"] == fy)
+                   and (months is None or r["month"] in months))
+
+    s = prs.slides.add_slide(prs.slide_layouts[6])
+    header(s, "Premier Integrated Labs, Timberland Kuching · detail",
+           "What changed in January", ["SNIBE MAGLUMI — kits and test capacity",
+                                       "FY26 full year vs FY27 to 4 Sep 2026"])
+
+    text(s, 0.5, 1.12, 7.55, 0.22,
+         [("KITS PURCHASED PER MONTH, BY ASSAY", 9, True, GREY600)])
+    cd = CategoryChartData()
+    cd.categories = [datetime.datetime.strptime(m, "%Y-%m").strftime("%b %y") for m in MONTHS]
+    for name, key, _ in ASSAYS:
+        cd.add_series(name, tuple(kits(key, months=[m]) for m in MONTHS))
+    gf = s.shapes.add_chart(XL_CHART_TYPE.COLUMN_STACKED, Inches(0.5), Inches(1.40),
+                            Inches(7.55), Inches(2.90), cd)
+    ch = gf.chart
+    ch.has_legend = True
+    ch.legend.position = XL_LEGEND_POSITION.TOP
+    ch.legend.include_in_layout = False
+    ch.plots[0].gap_width = 45
+    for n, colour in enumerate((DARK, LIGHT, SKY600)):
+        ch.series[n].format.fill.solid()
+        ch.series[n].format.fill.fore_color.rgb = colour
+    style_chart(ch, cat_size=8, val_fmt='0')
+
+    text(s, 8.28, 1.12, 4.55, 0.22,
+         [("TEST CAPACITY PURCHASED", 9, True, GREY600)])
+    body = []
+    for name, key, size in ASSAYS:
+        k26, k27 = kits(key, fy="FY26"), kits(key, fy="FY27")
+        tests = (f"{k26 * size:,.0f} → {k27 * size:,.0f}" if size else "—")
+        body.append([name, size and f"{size}/kit" or "n/a",
+                     f"{k26:.0f} → {k27:.0f}", tests])
+    table(s, 8.28, 1.40, 4.55, [1.62, 0.80, 0.86, 1.27], body,
+          ["Assay (CLIA)", "Kit size", "Kits", "Tests"], font_size=9, row_h=0.34)
+
+    box(s, 8.28, 2.92, 4.55, 1.38, fill=SKY100, line=GREY200, radius=0.05)
+    text(s, 8.52, 3.08, 4.07, 1.06,
+         [[("The instrument never stopped.", 10.5, True, DARK)],
+          [("MAGLUMI consumables — cups, wash and system liquid, light check — kept being "
+            "delivered right through the quiet months, all at RM 0. The analyser is "
+            "running; the reagent menu narrowed.", 9.5, False, GREY800)]], spacing=1.22)
+
+    points(s, 0.5, 4.48, 12.333, 1.28, "What to ask", [
+        ("Nothing at all in January.",
+         "All three assays went to zero that month, then EBV and ANA came back and "
+         "H. pylori did not. Something changed then — find out what."),
+        ("H. pylori is the whole gap.",
+         "9,200 tests of capacity in FY26 against 700 so far. If referrals moved to "
+         "another method or lab, that is the recoverable volume."),
+        ("EBV and ANA are steady.",
+         "Both are tracking close to last year's rhythm, so this is not the account "
+         "pulling back from the platform."),
+    ])
+
+    footer(s, "Kits are billed units; test capacity is kits × kit size (EBV kit size not "
+              "stated on the invoice line). Source: SAP AR invoice export, ship-to Timberland "
+              "Medical Centre Kuching, billed to Premier Integrated Labs Sdn Bhd.")
+
+
 def main():
     rows = load()
     prs = Presentation()
     prs.slide_width, prs.slide_height = Inches(13.333), Inches(7.5)
     slide_hus(prs, rows)
+    slide_hus_detail(prs, rows)
     slide_pil(prs, rows)
+    slide_pil_detail(prs, rows)
     prs.save(OUT)
     print(f"wrote {OUT}")
 
