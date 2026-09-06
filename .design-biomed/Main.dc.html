@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+    a { color: #2F92C2; text-decoration: none; } a:hover { color: #003366; }
+    .swatch { border-radius: 8px; height: 84px; border: 1px solid #E3E8EC; }
+    .mono { font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+  </style>
+</helmet>
+
+<div style="width: 1200px; background: #FFFFFF; color: #2B3138;">
+
+  <!-- Masthead -->
+  <div style="background: #003366; padding: 48px 64px 44px 64px; color: #FFFFFF;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px;">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-size: 13px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #78C8EF;">Brand Identity &amp; Style Guide 2025</div>
+        <div style="font-size: 52px; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em;">Biomed Global<br>Design System</div>
+        <div style="font-size: 18px; font-weight: 400; color: #DCF2FD; max-width: 620px;">Empowering Partners, Enriching Lives.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px; text-align: right; font-size: 13px; color: #DCF2FD; line-height: 1.6;">
+        <div>Foundations · Sheet 1 of 3</div>
+        <div>Menara Biomed, Kuala Lumpur</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Non-negotiables strip -->
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: #E3E8EC; border-bottom: 1px solid #E3E8EC;">
+    <div style="background: #E6EDF4; padding: 22px 28px; display: flex; flex-direction: column; gap: 6px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #003366;">Two corporate colours</div>
+      <div style="font-size: 14px; color: #5D666E; line-height: 1.5;">Dark blue and light blue only. Every other value is a derived tint, shade or neutral. No third accent hue.</div>
+    </div>
+    <div style="background: #E6EDF4; padding: 22px 28px; display: flex; flex-direction: column; gap: 6px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #003366;">One typeface</div>
+      <div style="font-size: 14px; color: #5D666E; line-height: 1.5;">DM Sans at 400, 500 and 700. Titles, subtitles and body. The logotype artwork is never re-set in type.</div>
+    </div>
+    <div style="background: #E6EDF4; padding: 22px 28px; display: flex; flex-direction: column; gap: 6px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #003366;">One Helix Wave per canvas</div>
+      <div style="font-size: 14px; color: #5D666E; line-height: 1.5;">Never rotated, recoloured, or at full opacity behind a logo. Omitted entirely on photo-led frames.</div>
+    </div>
+  </div>
+
+  <div style="padding: 56px 64px; display: flex; flex-direction: column; gap: 56px;">
+
+    <!-- Colour -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #2F92C2;">01 — Colour</div>
+        <div style="font-size: 30px; font-weight: 700; color: #003366; letter-spacing: -0.01em;">Corporate colours</div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="swatch" style="background: #003366; height: 132px;"></div>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <div style="font-size: 15px; font-weight: 700; color: #2B3138;">Dark blue</div>
+            <div class="mono" style="font-size: 14px; color: #5D666E;">#003366</div>
+            <div style="font-size: 13px; color: #5D666E; line-height: 1.5;">Corporate, headings, dark bands, primary fills.</div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="swatch" style="background: #78C8EF; height: 132px;"></div>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <div style="font-size: 15px; font-weight: 700; color: #2B3138;">Light blue</div>
+            <div class="mono" style="font-size: 14px; color: #5D666E;">#78C8EF</div>
+            <div style="font-size: 13px; color: #5D666E; line-height: 1.5;">Accent, secondary chart series, highlights, focus rings.</div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="swatch" style="background: #0F1B2B; height: 132px;"></div>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <div style="font-size: 15px; font-weight: 700; color: #2B3138;">Pantone 296C</div>
+            <div class="mono" style="font-size: 14px; color: #5D666E;">#0F1B2B</div>
+            <div style="font-size: 13px; color: #5D666E; line-height: 1.5;">Deep background behind Helix Waves.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; padding-top: 8px;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="swatch" style="background: #2F92C2;"></div>
+          <div style="display: flex; flex-direction: column; gap: 1px;">
+            <div style="font-size: 13px; font-weight: 500;">Sky 600</div>
+            <div class="mono" style="font-size: 12px; color: #5D666E;">#2F92C2</div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="swatch" style="background: #DCF2FD;"></div>
+          <div style="display: flex; flex-direction: column; gap: 1px;">
+            <div style="font-size: 13px; font-weight: 500;">Sky 100</div>
+            <div class="mono" style="font-size: 12px; color: #5D666E;">#DCF2FD</div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="swatch" style="background: #E6EDF4;"></div>
+          <div style="display: flex; flex-direction: column; gap: 1px;">
+            <div style="font-size: 13px; font-weight: 500;">Blue 50</div>
+            <div class="mono" style="font-size: 12px; color: #5D666E;">#E6EDF4</div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="swatch" style="background: #2B3138;"></div>
+          <div style="display: flex; flex-direction: column; gap: 1px;">
+            <div style="font-size: 13px; font-weight: 500;">Grey 800</div>
+            <div class="mono" style="font-size: 12px; color: #5D666E;">#2B3138</div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="swatch" style="background: #5D666E;"></div>
+          <div style="display: flex; flex-direction: column; gap: 1px;">
+            <div style="font-size: 13px; font-weight: 500;">Grey 600</div>
+            <div class="mono" style="font-size: 12px; color: #5D666E;">#5D666E</div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="swatch" style="background: #E3E8EC;"></div>
+          <div style="display: flex; flex-direction: column; gap: 1px;">
+            <div style="font-size: 13px; font-weight: 500;">Grey 200</div>
+            <div class="mono" style="font-size: 12px; color: #5D666E;">#E3E8EC</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding-top: 4px;">
+        <div style="border: 1px solid #E3E8EC; border-radius: 14px; padding: 20px 22px; background: #EFF8F2; display: flex; flex-direction: column; gap: 4px;">
+          <div style="font-size: 14px; font-weight: 700; color: #1F6B44;">Success</div>
+          <div class="mono" style="font-size: 13px; color: #1F6B44;">#1F6B44 on #EFF8F2</div>
+        </div>
+        <div style="border: 1px solid #E3E8EC; border-radius: 14px; padding: 20px 22px; background: #FDECEA; display: flex; flex-direction: column; gap: 4px;">
+          <div style="font-size: 14px; font-weight: 700; color: #8C2417;">Danger</div>
+          <div class="mono" style="font-size: 13px; color: #8C2417;">#8C2417 on #FDECEA</div>
+        </div>
+        <div style="border: 1px solid #E3E8EC; border-radius: 14px; padding: 20px 22px; background: #FFFFFF; display: flex; flex-direction: column; gap: 4px;">
+          <div style="font-size: 14px; font-weight: 700; color: #003366;">Accent text rule</div>
+          <div style="font-size: 13px; color: #5D666E; line-height: 1.5;">Light blue fails contrast as text on white — use Sky 600 instead.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 1px; background: #E3E8EC;"></div>
+
+    <!-- Typography -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #2F92C2;">02 — Typography</div>
+        <div style="font-size: 30px; font-weight: 700; color: #003366; letter-spacing: -0.01em;">DM Sans, three weights</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column;">
+        <div style="display: flex; align-items: baseline; gap: 28px; padding: 18px 0; border-bottom: 1px solid #E3E8EC;">
+          <div class="mono" style="width: 190px; flex-shrink: 0; font-size: 12px; color: #5D666E;">Display · 52 / 700 / -0.02em</div>
+          <div style="font-size: 52px; font-weight: 700; color: #003366; letter-spacing: -0.02em; line-height: 1.05;">Diagnostics, delivered</div>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 28px; padding: 18px 0; border-bottom: 1px solid #E3E8EC;">
+          <div class="mono" style="width: 190px; flex-shrink: 0; font-size: 12px; color: #5D666E;">Heading · 30 / 700</div>
+          <div style="font-size: 30px; font-weight: 700; color: #003366; letter-spacing: -0.01em;">Laboratory systems and service</div>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 28px; padding: 18px 0; border-bottom: 1px solid #E3E8EC;">
+          <div class="mono" style="width: 190px; flex-shrink: 0; font-size: 12px; color: #5D666E;">Subhead · 20 / 500</div>
+          <div style="font-size: 20px; font-weight: 500; color: #2B3138;">Nationwide service coverage, including East Malaysia</div>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 28px; padding: 18px 0; border-bottom: 1px solid #E3E8EC;">
+          <div class="mono" style="width: 190px; flex-shrink: 0; font-size: 12px; color: #5D666E;">Body · 16 / 400 / 1.6</div>
+          <div style="font-size: 16px; font-weight: 400; color: #2B3138; line-height: 1.6; max-width: 640px; text-wrap: pretty;">Body copy sits in sentence case at a comfortable measure. Specifications and clinical figures are reproduced verbatim with their source — never rounded or restated.</div>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 28px; padding: 18px 0; border-bottom: 1px solid #E3E8EC;">
+          <div class="mono" style="width: 190px; flex-shrink: 0; font-size: 12px; color: #5D666E;">Caption · 13 / 400</div>
+          <div style="font-size: 13px; font-weight: 400; color: #5D666E;">Source: Brand Identity &amp; Style Guide 2025</div>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 28px; padding: 18px 0;">
+          <div class="mono" style="width: 190px; flex-shrink: 0; font-size: 12px; color: #5D666E;">Eyebrow · 12 / 700 / 0.14em</div>
+          <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #2F92C2;">Principal brands</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 1px; background: #E3E8EC;"></div>
+
+    <!-- Spacing, radius, elevation -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #2F92C2;">03 — Form</div>
+        <div style="font-size: 30px; font-weight: 700; color: #003366; letter-spacing: -0.01em;">Radius, elevation, motion</div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;">
+        <div style="border: 1px solid #E3E8EC; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+          <div style="font-size: 15px; font-weight: 700; color: #003366;">Radius</div>
+          <div style="display: flex; align-items: flex-end; gap: 16px;">
+            <div style="width: 72px; height: 44px; background: #E6EDF4; border: 1px solid #E3E8EC; border-radius: 8px;"></div>
+            <div style="width: 96px; height: 72px; background: #E6EDF4; border: 1px solid #E3E8EC; border-radius: 14px;"></div>
+          </div>
+          <div style="font-size: 13px; color: #5D666E; line-height: 1.5;">8px for controls · 14px for cards and hero bands.</div>
+        </div>
+        <div style="border: 1px solid #E3E8EC; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+          <div style="font-size: 15px; font-weight: 700; color: #003366;">Elevation</div>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 96px; height: 60px; background: #FFFFFF; border: 1px solid #E3E8EC; border-radius: 8px;"></div>
+            <div style="width: 96px; height: 60px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 1px 2px rgba(15, 27, 43, 0.06), 0 6px 16px rgba(15, 27, 43, 0.08);"></div>
+          </div>
+          <div style="font-size: 13px; color: #5D666E; line-height: 1.5;">Soft and low-contrast only — no hard drops, no coloured glows.</div>
+        </div>
+        <div style="border: 1px solid #E3E8EC; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+          <div style="font-size: 15px; font-weight: 700; color: #003366;">Motion</div>
+          <div class="mono" style="font-size: 14px; color: #2B3138; line-height: 1.7;">120–200ms<br>cubic-bezier(0.4, 0, 0.2, 1)</div>
+          <div style="font-size: 13px; color: #5D666E; line-height: 1.5;">Hover and press states only. No entrance choreography.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div style="background: #0F1B2B; padding: 32px 64px; display: flex; justify-content: space-between; align-items: center; color: #DCF2FD; font-size: 13px;">
+    <div>Biomed Global · established 1994 · Malaysia and Singapore</div>
+    <div style="color: #78C8EF; font-weight: 500;">Empowering Partners, Enriching Lives.</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

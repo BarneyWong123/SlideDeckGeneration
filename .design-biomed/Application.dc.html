@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+    a { color: #2F92C2; text-decoration: none; } a:hover { color: #003366; }
+    .cell { font-size: 14px; color: #2B3138; }
+    .head { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5D666E; }
+  </style>
+</helmet>
+
+<div style="width: 1440px; height: 900px; background: #F7F9FB; color: #2B3138; display: flex; flex-direction: column;">
+
+  <!-- App bar -->
+  <div style="background: #003366; height: 64px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 32px;">
+    <div style="display: flex; align-items: center; gap: 32px;">
+      <div style="height: 32px; padding: 0 14px; border: 1px dashed #78C8EF; border-radius: 8px; display: flex; align-items: center; font-size: 11px; letter-spacing: 0.08em; color: #78C8EF;">[LOGO — logo-white.png]</div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="font-size: 14px; font-weight: 500; color: #FFFFFF; padding: 8px 14px; border-radius: 8px; background: rgba(120, 200, 239, 0.18);">Deliveries</div>
+        <div style="font-size: 14px; font-weight: 400; color: #DCF2FD; padding: 8px 14px; border-radius: 8px;">Quotations</div>
+        <div style="font-size: 14px; font-weight: 400; color: #DCF2FD; padding: 8px 14px; border-radius: 8px;">Service</div>
+        <div style="font-size: 14px; font-weight: 400; color: #DCF2FD; padding: 8px 14px; border-radius: 8px;">Reports</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div style="height: 36px; width: 260px; border-radius: 8px; background: rgba(255, 255, 255, 0.12); display: flex; align-items: center; gap: 10px; padding: 0 12px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DCF2FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>
+        <span style="font-size: 13px; color: #DCF2FD;">Search quotations</span>
+      </div>
+      <div style="width: 36px; height: 36px; border-radius: 999px; background: #78C8EF; color: #003366; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center;">BW</div>
+    </div>
+  </div>
+
+  <div style="flex-grow: 1; padding: 32px; display: flex; flex-direction: column; gap: 24px; overflow: hidden;">
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #2F92C2;">Advance delivery portal</div>
+        <div style="font-size: 30px; font-weight: 700; color: #003366; letter-spacing: -0.01em;">Delivery requests</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="background: #FFFFFF; color: #003366; border: 1px solid #003366; font-size: 14px; font-weight: 500; padding: 0 20px; height: 40px; display: flex; align-items: center; border-radius: 8px;">Export</div>
+        <div style="background: #003366; color: #FFFFFF; font-size: 14px; font-weight: 500; padding: 0 20px; height: 40px; display: flex; align-items: center; border-radius: 8px;">New request</div>
+      </div>
+    </div>
+
+    <!-- Stat row -->
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px;">
+      <div style="background: #FFFFFF; border: 1px solid #E3E8EC; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 8px;">
+        <div class="head">Open requests</div>
+        <div style="font-size: 34px; font-weight: 700; color: #003366; line-height: 1;">18</div>
+        <div style="font-size: 13px; color: #5D666E;">Across 11 institutions</div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E3E8EC; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 8px;">
+        <div class="head">Despatched this week</div>
+        <div style="font-size: 34px; font-weight: 700; color: #003366; line-height: 1;">42</div>
+        <div style="font-size: 13px; color: #5D666E;">Peninsular and East Malaysia</div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E3E8EC; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 8px;">
+        <div class="head">Awaiting approval</div>
+        <div style="font-size: 34px; font-weight: 700; color: #003366; line-height: 1;">6</div>
+        <div style="font-size: 13px; color: #8C2417;">2 older than 5 days</div>
+      </div>
+      <div style="background: #E6EDF4; border: 1px solid #E3E8EC; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px;">
+        <div class="head">Requests by month</div>
+        <div style="display: flex; align-items: flex-end; gap: 10px; height: 56px;">
+          <div style="flex-grow: 1; height: 26px; background: #78C8EF; border-radius: 3px;"></div>
+          <div style="flex-grow: 1; height: 34px; background: #78C8EF; border-radius: 3px;"></div>
+          <div style="flex-grow: 1; height: 30px; background: #78C8EF; border-radius: 3px;"></div>
+          <div style="flex-grow: 1; height: 44px; background: #78C8EF; border-radius: 3px;"></div>
+          <div style="flex-grow: 1; height: 40px; background: #78C8EF; border-radius: 3px;"></div>
+          <div style="flex-grow: 1; height: 56px; background: #003366; border-radius: 3px;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #5D666E;">
+          <span>Apr</span><span>Sep</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div style="background: #FFFFFF; border: 1px solid #E3E8EC; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column;">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid #E3E8EC;">
+        <div style="font-size: 16px; font-weight: 700; color: #003366;">Recent requests</div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="font-size: 13px; font-weight: 500; color: #003366; background: #E6EDF4; padding: 6px 12px; border-radius: 999px;">All</div>
+          <div style="font-size: 13px; color: #5D666E; padding: 6px 12px;">Pending</div>
+          <div style="font-size: 13px; color: #5D666E; padding: 6px 12px;">Despatched</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1.1fr 2fr 1.4fr 1fr 1fr; gap: 16px; padding: 12px 24px; background: #F7F9FB; border-bottom: 1px solid #E3E8EC;">
+        <div class="head">Quotation</div>
+        <div class="head">Institution</div>
+        <div class="head">Principal</div>
+        <div class="head">Requested</div>
+        <div class="head">Status</div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1.1fr 2fr 1.4fr 1fr 1fr; gap: 16px; padding: 16px 24px; border-bottom: 1px solid #E3E8EC; align-items: center;">
+        <div class="cell" style="font-weight: 500; color: #003366;">QT-26-0418</div>
+        <div class="cell">Hospital Queen Elizabeth II, Kota Kinabalu</div>
+        <div class="cell">Helmer Scientific</div>
+        <div class="cell" style="color: #5D666E;">2 Sep 2026</div>
+        <div><span style="background: #EFF8F2; color: #1F6B44; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px;">Despatched</span></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1.1fr 2fr 1.4fr 1fr 1fr; gap: 16px; padding: 16px 24px; border-bottom: 1px solid #E3E8EC; align-items: center;">
+        <div class="cell" style="font-weight: 500; color: #003366;">QT-26-0421</div>
+        <div class="cell">Pantai Premier Pathology, Ampang</div>
+        <div class="cell">Sigma</div>
+        <div class="cell" style="color: #5D666E;">3 Sep 2026</div>
+        <div><span style="background: #DCF2FD; color: #003366; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px;">In transit</span></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1.1fr 2fr 1.4fr 1fr 1fr; gap: 16px; padding: 16px 24px; border-bottom: 1px solid #E3E8EC; align-items: center;">
+        <div class="cell" style="font-weight: 500; color: #003366;">QT-26-0426</div>
+        <div class="cell">Hospital Sultanah Aminah, Johor Bahru</div>
+        <div class="cell">bmsBloodcare</div>
+        <div class="cell" style="color: #5D666E;">4 Sep 2026</div>
+        <div><span style="background: #E6EDF4; color: #003366; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px;">Pending</span></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1.1fr 2fr 1.4fr 1fr 1fr; gap: 16px; padding: 16px 24px; align-items: center;">
+        <div class="cell" style="font-weight: 500; color: #003366;">QT-26-0430</div>
+        <div class="cell">Sarawak General Hospital, Kuching</div>
+        <div class="cell">Bioptik</div>
+        <div class="cell" style="color: #5D666E;">5 Sep 2026</div>
+        <div><span style="background: #FDECEA; color: #8C2417; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px;">Overdue</span></div>
+      </div>
+    </div>
+
+    <div style="font-size: 12px; color: #5D666E;">Sample records for layout only — not real delivery data.</div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+    a { color: #2F92C2; text-decoration: none; } a:hover { color: #003366; }
+    .lbl { font-size: 12px; font-weight: 500; color: #5D666E; letter-spacing: 0.04em; }
+    .sec-title { font-size: 15px; font-weight: 700; color: #003366; }
+  </style>
+</helmet>
+
+<div style="width: 1200px; background: #FFFFFF; color: #2B3138;">
+
+  <div style="background: #003366; padding: 36px 64px; display: flex; justify-content: space-between; align-items: center; color: #FFFFFF;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <div style="font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #78C8EF;">Sheet 2 of 3</div>
+      <div style="font-size: 34px; font-weight: 700; letter-spacing: -0.015em;">Components</div>
+    </div>
+    <div style="font-size: 13px; color: #DCF2FD;">Controls 32px / 40px · radius 8px · focus ring #78C8EF</div>
+  </div>
+
+  <div style="padding: 48px 64px; display: flex; flex-direction: column; gap: 44px;">
+
+    <!-- Buttons -->
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+      <div class="sec-title">Button</div>
+      <div style="border: 1px solid #E3E8EC; border-radius: 14px; padding: 28px 32px; display: flex; flex-direction: column; gap: 24px;">
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="lbl">Primary</div>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-start;">
+              <div style="background: #003366; color: #FFFFFF; font-size: 14px; font-weight: 500; padding: 0 20px; height: 40px; display: flex; align-items: center; border-radius: 8px;">Request a quote</div>
+              <div style="background: #012A54; color: #FFFFFF; font-size: 14px; font-weight: 500; padding: 0 20px; height: 40px; display: flex; align-items: center; border-radius: 8px;">Hover</div>
+              <div style="background: #003366; color: #FFFFFF; font-size: 14px; font-weight: 500; padding: 0 20px; height: 40px; display: flex; align-items: center; border-radius: 8px; box-shadow: 0 0 0 3px #78C8EF;">Focus</div>
+              <div style="background: #A9B7C6; color: #FFFFFF; font-size: 14px; font-weight: 500; padding: 0 20px; height: 40px; display: flex; align-items: center; border-radius: 8px;">Disabled</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="lbl">Secondary</div>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-start;">
+              <div style="background: #FFFFFF; color: #003366; border: 1px solid #003366; font-size: 14px; font-weight: 500; padding: 0 20px; height: 40px; display: flex; align-items: center; border-radius: 8px;">View catalogue</div>
+              <div style="background: #E6EDF4; color: #003366; border: 1px solid #003366; font-size: 14px; font-weight: 500; padding: 0 20px; height: 40px; display: flex; align-items: center; border-radius: 8px;">Hover</div>
+              <div style="background: #FFFFFF; color: #003366; border: 1px solid #003366; font-size: 14px; font-weight: 500; padding: 0 20px; height: 40px; display: flex; align-items: center; border-radius: 8px; box-shadow: 0 0 0 3px #78C8EF;">Focus</div>
+              <div style="background: #FFFFFF; color: #A9B7C6; border: 1px solid #E3E8EC; font-size: 14px; font-weight: 500; padding: 0 20px; height: 40px; display: flex; align-items: center; border-radius: 8px;">Disabled</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="lbl">Quiet</div>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-start;">
+              <div style="color: #2F92C2; font-size: 14px; font-weight: 500; padding: 0 12px; height: 40px; display: flex; align-items: center; border-radius: 8px;">Download spec</div>
+              <div style="background: #E6EDF4; color: #003366; font-size: 14px; font-weight: 500; padding: 0 12px; height: 40px; display: flex; align-items: center; border-radius: 8px;">Hover</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="lbl">Sizes</div>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-start;">
+              <div style="background: #003366; color: #FFFFFF; font-size: 13px; font-weight: 500; padding: 0 14px; height: 32px; display: flex; align-items: center; border-radius: 8px;">Small · 32px</div>
+              <div style="background: #003366; color: #FFFFFF; font-size: 14px; font-weight: 500; padding: 0 20px; height: 40px; display: flex; align-items: center; border-radius: 8px;">Medium · 40px</div>
+              <div style="background: #003366; color: #FFFFFF; font-size: 16px; font-weight: 500; padding: 0 26px; height: 48px; display: flex; align-items: center; border-radius: 8px;">Large · 48px</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+      <div class="sec-title">Input, Select, Checkbox, Switch</div>
+      <div style="border: 1px solid #E3E8EC; border-radius: 14px; padding: 28px 32px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px;">
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="font-size: 13px; font-weight: 500; color: #2B3138;">Institution</div>
+            <div style="height: 40px; border: 1px solid #E3E8EC; border-radius: 8px; display: flex; align-items: center; padding: 0 14px; font-size: 14px; color: #A9B7C6;">Search hospitals and labs</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="font-size: 13px; font-weight: 500; color: #2B3138;">Filled &amp; focused</div>
+            <div style="height: 40px; border: 1px solid #003366; border-radius: 8px; display: flex; align-items: center; padding: 0 14px; font-size: 14px; color: #2B3138; box-shadow: 0 0 0 3px #78C8EF;">Hospital Sultanah Aminah</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="font-size: 13px; font-weight: 500; color: #8C2417;">Quotation number</div>
+            <div style="height: 40px; border: 1px solid #8C2417; border-radius: 8px; display: flex; align-items: center; padding: 0 14px; font-size: 14px; color: #2B3138; background: #FDECEA;">QT-2026</div>
+            <div style="font-size: 12px; color: #8C2417;">Enter the full reference, including the branch suffix.</div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="font-size: 13px; font-weight: 500; color: #2B3138;">Principal brand</div>
+            <div style="height: 40px; border: 1px solid #E3E8EC; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; font-size: 14px; color: #2B3138;">
+              <span>Helmer Scientific</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5D666E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="font-size: 13px; font-weight: 500; color: #2B3138;">Notes</div>
+            <div style="height: 96px; border: 1px solid #E3E8EC; border-radius: 8px; padding: 12px 14px; font-size: 14px; color: #A9B7C6; line-height: 1.5;">Delivery instructions, access constraints, on-site contact.</div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="lbl">Checkbox</div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 20px; height: 20px; border-radius: 6px; background: #003366; display: flex; align-items: center; justify-content: center;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+              <span style="font-size: 14px;">Include installation</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 20px; height: 20px; border-radius: 6px; border: 1px solid #E3E8EC; background: #FFFFFF;"></div>
+              <span style="font-size: 14px;">Include annual service contract</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="lbl">Switch</div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 44px; height: 24px; border-radius: 999px; background: #003366; display: flex; align-items: center; justify-content: flex-end; padding: 0 3px;">
+                <div style="width: 18px; height: 18px; border-radius: 999px; background: #FFFFFF;"></div>
+              </div>
+              <span style="font-size: 14px;">East Malaysia coverage</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 44px; height: 24px; border-radius: 999px; background: #E3E8EC; display: flex; align-items: center; justify-content: flex-start; padding: 0 3px;">
+                <div style="width: 18px; height: 18px; border-radius: 999px; background: #FFFFFF;"></div>
+              </div>
+              <span style="font-size: 14px; color: #5D666E;">Expedited despatch</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Badges, tabs, cards -->
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+      <div class="sec-title">Badge, Tabs, Card</div>
+      <div style="border: 1px solid #E3E8EC; border-radius: 14px; padding: 28px 32px; display: flex; flex-direction: column; gap: 28px;">
+
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <div style="background: #E6EDF4; color: #003366; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px;">Default</div>
+          <div style="background: #DCF2FD; color: #003366; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px;">Highlight</div>
+          <div style="background: #EFF8F2; color: #1F6B44; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px;">Delivered</div>
+          <div style="background: #FDECEA; color: #8C2417; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px;">Overdue</div>
+          <div style="background: #003366; color: #FFFFFF; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px;">Sigma</div>
+        </div>
+
+        <div style="display: flex; align-items: flex-end; gap: 4px; border-bottom: 1px solid #E3E8EC;">
+          <div style="font-size: 14px; font-weight: 500; color: #003366; padding: 10px 16px; border-bottom: 2px solid #003366;">Overview</div>
+          <div style="font-size: 14px; font-weight: 400; color: #5D666E; padding: 10px 16px; border-bottom: 2px solid transparent;">Specifications</div>
+          <div style="font-size: 14px; font-weight: 400; color: #5D666E; padding: 10px 16px; border-bottom: 2px solid transparent;">Service</div>
+          <div style="font-size: 14px; font-weight: 400; color: #A9B7C6; padding: 10px 16px; border-bottom: 2px solid transparent;">Documents</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;">
+          <div style="border: 1px solid #E3E8EC; border-radius: 14px; overflow: hidden; background: #FFFFFF; box-shadow: 0 1px 2px rgba(15, 27, 43, 0.06);">
+            <div style="height: 8px; background: #003366;"></div>
+            <div style="padding: 22px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #2F92C2;">Blood management</div>
+              <div style="font-size: 18px; font-weight: 700; color: #003366;">Helmer Scientific</div>
+              <div style="font-size: 14px; color: #5D666E; line-height: 1.6;">Blood bank refrigerators, plasma freezers and platelet incubators for transfusion services.</div>
+              <div style="display: flex; align-items: center; gap: 8px; padding-top: 4px;">
+                <span style="font-size: 14px; font-weight: 500; color: #2F92C2;">View range</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F92C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </div>
+            </div>
+          </div>
+          <div style="border: 1px solid #E3E8EC; border-radius: 14px; background: #E6EDF4; padding: 22px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #2F92C2;">Panel fill</div>
+            <div style="font-size: 18px; font-weight: 700; color: #003366;">Blue 50 surface</div>
+            <div style="font-size: 14px; color: #5D666E; line-height: 1.6;">Used for secondary panels on white. Keeps the page calm without introducing a second hue.</div>
+          </div>
+          <div style="border-radius: 14px; background: #0F1B2B; padding: 22px; display: flex; flex-direction: column; gap: 10px; color: #FFFFFF;">
+            <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #78C8EF;">Dark band</div>
+            <div style="font-size: 18px; font-weight: 700;">Pantone 296C</div>
+            <div style="font-size: 14px; color: #DCF2FD; line-height: 1.6;">Reserved for Helix Wave backgrounds and full-bleed section breaks.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

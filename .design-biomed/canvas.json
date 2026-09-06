@@ -1,0 +1,11 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1200, "h": 1720, "title": "Foundations", "print": "fixed" },
+    { "file": "Components.dc.html", "x": 1320, "y": 0, "w": 1200, "h": 1360, "title": "Components", "print": "fixed" },
+    { "file": "Application.dc.html", "x": 2640, "y": 0, "w": 1440, "h": 900, "title": "In application", "print": "fixed" }
+  ],
+  "annotations": [
+    { "id": "brief", "x": 0, "y": -190, "w": 620, "text": "Biomed Global design system — built from the Brand Identity & Style Guide 2025 tokens.\n\nLogo artwork and the Helix Wave graphics are not drawn here: they are never redrawn, so the app bar carries a marked placeholder for logo-white.png." }
+  ],
+  "launch": { "view": "canvas" }
+}
