@@ -21,9 +21,16 @@ import openpyxl
 warnings.filterwarnings("ignore")
 
 # --- period definitions ----------------------------------------------------------
-FY_BOUNDARY = datetime.datetime(2026, 5, 1)   # financial year runs May -> Apr
-LFL_FY26 = ["2025-05", "2025-06", "2025-07", "2025-08"]
-LFL_FY27 = ["2026-05", "2026-06", "2026-07", "2026-08"]
+# Calendar years. The export opens on 5 May 2025 and closes on 4 Sep 2026, so 2025 is
+# only its last eight months and 2026 only its first eight -- equal-length windows,
+# but different halves of the year, which is why the like-for-like pair below exists.
+Y25 = [f"2025-{m:02d}" for m in range(5, 13)]
+Y25_LABEL = "2025 · May–Dec"
+Y26 = [f"2026-{m:02d}" for m in range(1, 9)]
+Y26_LABEL = "2026 YTD · Jan–Aug"
+# The one window present in both years: the part-month of Sep 2026 is excluded.
+LFL_25 = ["2025-05", "2025-06", "2025-07", "2025-08"]
+LFL_26 = ["2026-05", "2026-06", "2026-07", "2026-08"]
 LAST_SIX = ["2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08"]
 
 TRANSFUSION = ("Bio-Rad", "Werfen Immucor")
@@ -100,7 +107,7 @@ def load(src):
             amt = 0.0
         out.append({
             "month": d.strftime("%Y-%m"),
-            "fy": "FY26" if d < FY_BOUNDARY else "FY27",
+            "year": d.year,
             "brand": r[idx["Brand"]],
             "group": r[idx["Product Group"]] or "",
             "product": r[idx["Product Name"]] or "",
@@ -168,67 +175,68 @@ def build_hus(rows):
     tx = [r for r in rows
           if "HOSPITAL UMUM SARAWAK" in r["ship"] and r["brand"] in TRANSFUSION]
 
-    fy26 = [r for r in tx if r["fy"] == "FY26"]
-    lfl26 = [r for r in tx if r["month"] in LFL_FY26]
-    lfl27 = [r for r in tx if r["month"] in LFL_FY27]
-
-    # units by product line, FY26 full year vs FY27 YTD
-    groups = collections.defaultdict(lambda: {"fy26": [], "fy27": []})
+    # units by product line, 2025 (May-Dec) vs 2026 YTD (Jan-Aug)
+    groups = collections.defaultdict(lambda: {"y25": [], "y26": []})
     for r in tx:
-        groups[r["group"]]["fy26" if r["fy"] == "FY26" else "fy27"].append(r)
+        if r["month"] in Y25:
+            groups[r["group"]]["y25"].append(r)
+        elif r["month"] in Y26:
+            groups[r["group"]]["y26"].append(r)
     by_line = []
     for g, v in groups.items():
-        f26 = sum(r["qty"] for r in v["fy26"])
-        f27 = sum(r["qty"] for r in v["fy27"])
-        if not (f26 or f27):
+        q25 = sum(r["qty"] for r in v["y25"])
+        q26 = sum(r["qty"] for r in v["y26"])
+        if not (q25 or q26):
             continue
         by_line.append({
             "label": GROUP_LABELS.get(g, str(g).title()),
-            "fy26": f26,
-            "fy27": f27,
-            # pace = FY27 YTD annualised (4 months of 12) against the FY26 count
-            "pace": (f27 * 3 / f26 * 100) if f26 else None,
-            "items26": breakdown(v["fy26"]),
-            "items27": breakdown(v["fy27"]),
+            "y25": q25,
+            "y26": q26,
+            # Both windows are eight months long, so this is a like-for-like ratio.
+            "change": (q26 / q25 - 1) * 100 if q25 else None,
+            "items25": breakdown(v["y25"]),
+            "items26": breakdown(v["y26"]),
         })
-    by_line.sort(key=lambda x: -(x["fy26"] + x["fy27"]))
+    by_line.sort(key=lambda x: -(x["y25"] + x["y26"]))
 
-    # Sarawak sites, like-for-like May-Aug
+    # Sarawak sites, like-for-like May-Aug in each year
     sites = []
     for name, keys in SARAWAK_SITES:
         site = [r for r in rows
                 if r["brand"] in TRANSFUSION and any(k in r["ship"] for k in keys)]
-        a = [r for r in site if r["month"] in LFL_FY26]
-        b = [r for r in site if r["month"] in LFL_FY27]
+        a = [r for r in site if r["month"] in LFL_25]
+        b = [r for r in site if r["month"] in LFL_26]
         qa, qb = sum(r["qty"] for r in a), sum(r["qty"] for r in b)
         if not (qa or qb):
             continue
         sites.append({
-            "label": name, "fy26": qa, "fy27": qb,
+            "label": name, "y25": qa, "y26": qb,
             "change": (qb / qa - 1) * 100 if qa else None,
-            "items26": breakdown(a), "items27": breakdown(b),
+            "items25": breakdown(a), "items26": breakdown(b),
         })
-    sites.sort(key=lambda x: -(x["fy26"] + x["fy27"]))
+    sites.sort(key=lambda x: -(x["y25"] + x["y26"]))
 
     monthly = [point(mlabel(m), [r for r in tx if r["month"] == m]) for m in LAST_SIX]
-    for p, m in zip(monthly, LAST_SIX):
-        p["fy"] = "FY26" if m < "2026-05" else "FY27"
 
     cards = [r for r in tx if r["group"] == "DM-ID CARDS"]
     bench = [r for r in tx if r["group"] in ("DM-ID CELLS", "DM-ID REAGENT", "DM-ID QC")]
 
+    def q(rs, months):
+        return sum(r["qty"] for r in rs if r["month"] in months)
+
     return {
-        "fy26_total": sum(r["qty"] for r in fy26),
-        "lfl26": sum(r["qty"] for r in lfl26),
-        "lfl27": sum(r["qty"] for r in lfl27),
+        "y25_total": q(tx, Y25),
+        "y26_total": q(tx, Y26),
+        "lfl25": q(tx, LFL_25),
+        "lfl26": q(tx, LFL_26),
         "by_line": by_line,
         "sites": sites,
         "monthly": monthly,
         "tender": [{"label": n, "value": v} for n, v in TENDER],
         "tender_total": TENDER_TOTAL,
-        "cards26": sum(r["qty"] for r in cards if r["fy"] == "FY26"),
-        "cards27": sum(r["qty"] for r in cards if r["fy"] == "FY27"),
-        "bench27": sum(r["qty"] for r in bench if r["fy"] == "FY27"),
+        "cards25": q(cards, Y25),
+        "cards26": q(cards, Y26),
+        "bench26": q(bench, Y26),
         "last_card_month": max((r["month"] for r in cards if r["qty"]), default=None),
         "cards_monthly": [
             point(mlabel(m), [r for r in cards if r["month"] == m]) for m in LAST_SIX],
@@ -271,6 +279,9 @@ def build_pil(rows):
     def tests(rs):
         return sum(r["tests"] for r in rs)
 
+    def window(rs, months):
+        return [r for r in rs if r["month"] in months]
+
     def tpoint(label, rs):
         agg = collections.defaultdict(float)
         for r in rs:
@@ -279,37 +290,38 @@ def build_pil(rows):
         return {"label": label, "value": tests(rs), "sub": None,
                 "items": [{"name": k, "units": v} for k, v in items]}
 
-    mix = collections.defaultdict(lambda: {"fy26": [], "fy27": []})
+    mix = collections.defaultdict(lambda: {"y25": [], "y26": []})
     for r in assays:
-        mix[assay_name(r["product"])]["fy26" if r["fy"] == "FY26" else "fy27"].append(r)
+        if r["month"] in Y25:
+            mix[assay_name(r["product"])]["y25"].append(r)
+        elif r["month"] in Y26:
+            mix[assay_name(r["product"])]["y26"].append(r)
     by_assay = []
     for name, v in mix.items():
-        size = kit_size(v["fy26"][0]["product"] if v["fy26"] else v["fy27"][0]["product"])
+        size = kit_size(v["y25"][0]["product"] if v["y25"] else v["y26"][0]["product"])
         by_assay.append({
             "label": name,
-            "fy26": tests(v["fy26"]), "fy27": tests(v["fy27"]),
-            "kits26": sum(r["qty"] for r in v["fy26"]),
-            "kits27": sum(r["qty"] for r in v["fy27"]),
+            "y25": tests(v["y25"]), "y26": tests(v["y26"]),
+            "kits25": sum(r["qty"] for r in v["y25"]),
+            "kits26": sum(r["qty"] for r in v["y26"]),
             "size": size,
-            "items26": [{"name": f"{sum(r['qty'] for r in v['fy26']):.0f} kits "
-                                 f"\u00d7 {size} tests", "units": tests(v["fy26"])}],
-            "items27": [{"name": f"{sum(r['qty'] for r in v['fy27']):.0f} kits "
-                                 f"\u00d7 {size} tests", "units": tests(v["fy27"])}],
+            "items25": [{"name": f"{sum(r['qty'] for r in v['y25']):.0f} kits "
+                                 f"\u00d7 {size} tests", "units": tests(v["y25"])}],
+            "items26": [{"name": f"{sum(r['qty'] for r in v['y26']):.0f} kits "
+                                 f"\u00d7 {size} tests", "units": tests(v["y26"])}],
         })
-    by_assay.sort(key=lambda x: -(x["fy26"] + x["fy27"]))
+    by_assay.sort(key=lambda x: -(x["y25"] + x["y26"]))
 
     monthly = [tpoint(mlabel(m), [r for r in assays if r["month"] == m])
                for m in LAST_SIX]
-    for p, m in zip(monthly, LAST_SIX):
-        p["fy"] = "FY26" if m < "2026-05" else "FY27"
 
     return {
-        "fy26_tests": tests([r for r in assays if r["fy"] == "FY26"]),
-        "fy27_tests": tests([r for r in assays if r["fy"] == "FY27"]),
-        "lfl26_tests": tests([r for r in assays if r["month"] in LFL_FY26]),
-        "lfl27_tests": tests([r for r in assays if r["month"] in LFL_FY27]),
-        "fy26_kits": sum(r["qty"] for r in assays if r["fy"] == "FY26"),
-        "fy27_kits": sum(r["qty"] for r in assays if r["fy"] == "FY27"),
+        "y25_tests": tests(window(assays, Y25)),
+        "y26_tests": tests(window(assays, Y26)),
+        "lfl25_tests": tests(window(assays, LFL_25)),
+        "lfl26_tests": tests(window(assays, LFL_26)),
+        "y25_kits": sum(r["qty"] for r in window(assays, Y25)),
+        "y26_kits": sum(r["qty"] for r in window(assays, Y26)),
         "by_assay": by_assay,
         "monthly": monthly,
         "free_lines": len(consumables),

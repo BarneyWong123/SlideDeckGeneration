@@ -23,11 +23,15 @@ ROOT = HERE.parent
 VISIT_DATE = "8 September 2026"
 
 SOURCE_NOTE = (
-    "Source: SAP AR invoice export, 5 May 2025 – 4 Sep 2026. Financial year runs "
-    "May–Apr, so FY27 YTD = May–Aug 2026; the part-month of September is excluded "
-    "from every comparison. Counts are invoiced quantities, including lines invoiced at "
-    "RM 0."
+    "Source: SAP AR invoice export, 5 May 2025 – 4 Sep 2026. Calendar years: the export "
+    "opens in May 2025 and closes in September 2026, so 2025 is its last eight months "
+    "(May–Dec) and 2026 its first eight (Jan–Aug) — equal-length windows. The part-month "
+    "of September 2026 is excluded throughout. Counts are invoiced quantities, including "
+    "lines invoiced at RM 0."
 )
+
+Y25 = "2025 &middot; May&ndash;Dec"
+Y26 = "2026 YTD &middot; Jan&ndash;Aug"
 
 
 def b64(path):
@@ -655,26 +659,29 @@ def build_html(data):
     slides = []
 
     # ---------- 01 HUS units by line ----------
-    prior = {"key": "fy26", "name": "FY26 full year", "color": "var(--s-prior)"}
-    cur = {"key": "fy27", "name": "FY27 YTD (May–Aug)", "color": "var(--s-current)"}
+    prior = {"key": "y25", "name": "2025 (May–Dec)", "color": "var(--s-prior)"}
+    cur = {"key": "y26", "name": "2026 YTD (Jan–Aug)", "color": "var(--s-current)"}
     charts.append({
         "id": "c-hus-line", "horizontal": True, "unit": "units",
         "categoryLabel": "Product line", "gutter": 430,
         "series": [prior, cur],
         "data": [{
             "label": r["label"],
-            "values": {"fy26": r["fy26"], "fy27": r["fy27"]},
-            "items": {"fy26": r["items26"], "fy27": r["items27"]},
-        } for r in hus["by_line"] if r["fy26"] + r["fy27"] >= 10],
+            "values": {"y25": r["y25"], "y26": r["y26"]},
+            "items": {"y25": r["items25"], "y26": r["items26"]},
+            "note": signed(r["change"]) if r["change"] is not None else "new",
+            "noteColor": "#8c2417" if (r["change"] or 0) < 0 else "#1f6b44",
+        } for r in hus["by_line"] if r["y25"] + r["y26"] >= 10],
     })
-    hus_delta = pct(hus["lfl27"], hus["lfl26"])
-    slides.append(f"""<section class="slide" data-notes="Everything on this slide is units purchased, not ringgit. Cells, diluent and QC are at or ahead of last year; gel cards are the whole gap. Hover any bar to name the products inside it.">
+    hus_delta = pct(hus["y26_total"], hus["y25_total"])
+    cards_delta = pct(hus["cards26"], hus["cards25"])
+    slides.append(f"""<section class="slide" data-notes="Everything on this slide is units purchased, not ringgit. Both windows are eight months long, so the percentages compare like with like. Gel cards carry the largest single share of the drop and none have been ordered since June. Hover any bar to name the products inside it.">
 {head("Hospital Umum Sarawak", "Units purchased &middot; Bio-Rad &amp; Werfen Immucor transfusion", logo)}
   <div class="body">
     <div class="kpis">
-      {kpi("FY26 full year", f"{n(hus['fy26_total'])} units", "Cards, cells, reagents and QC")}
-      {kpi("FY27 &middot; May&ndash;Aug", f"{n(hus['lfl27'])} units",
-         f"{signed(hus_delta, 0)} vs {n(hus['lfl26'])} in the same four months",
+      {kpi(Y25, f"{n(hus['y25_total'])} units", "Eight months of invoiced quantity")}
+      {kpi(Y26, f"{n(hus['y26_total'])} units",
+         f"{signed(hus_delta, 0)} on the same eight-month span",
          subcls="bad" if hus_delta < 0 else "good")}
       {kpi("Since the last gel card order", "2 months", "Last cards shipped June 2026", cls="tint")}
     </div>
@@ -682,17 +689,19 @@ def build_html(data):
       <div class="chart" id="c-hus-line">
         <div class="chart-top">
           <div class="label">Units by product line</div>
-          <div class="hint">FY26 is twelve months, FY27 four</div>
+          <div class="hint">Eight months each &middot; May&ndash;Dec 2025 vs Jan&ndash;Aug 2026</div>
         </div>
       </div>
       <div class="read">
         <div class="label">The one-line read</div>
-        <p>Bench consumption is holding &mdash; cells, diluent and QC all sit at or above
-           last year's pace. The gap is almost entirely in <strong>gel cards</strong>.</p>
+        <p>Volume is down across the consumables, with <strong>gel cards</strong> carrying the
+           largest single share of it &mdash; and none ordered since June. Reagent and QC are
+           the two lines still growing.</p>
         <dl>
-          <div><dt>Card units, FY26</dt><dd>{n(hus['cards26'])}</dd></div>
-          <div><dt>Card units, FY27 YTD</dt><dd style="color:var(--bad)">{n(hus['cards27'])}</dd></div>
-          <div><dt>Cells, reagent &amp; QC, FY27 YTD</dt><dd style="color:var(--good)">{n(hus['bench27'])}</dd></div>
+          <div><dt>Gel cards, 2025 &rarr; 2026 YTD</dt>
+               <dd style="color:var(--bad)">{n(hus['cards25'])} &rarr; {n(hus['cards26'])}</dd></div>
+          <div><dt>That is</dt><dd style="color:var(--bad)">{signed(cards_delta)}</dd></div>
+          <div><dt>Cells, reagent &amp; QC, 2026 YTD</dt><dd>{n(hus['bench26'])}</dd></div>
         </dl>
       </div>
     </div>
@@ -705,13 +714,13 @@ def build_html(data):
         "id": "c-hus-sites", "horizontal": True, "unit": "units",
         "categoryLabel": "Site", "gutter": 320,
         "series": [
-            {"key": "fy26", "name": "FY26 May–Aug", "color": "var(--s-prior)"},
-            {"key": "fy27", "name": "FY27 May–Aug", "color": "var(--s-current)"},
+            {"key": "y25", "name": "May–Aug 2025", "color": "var(--s-prior)"},
+            {"key": "y26", "name": "May–Aug 2026", "color": "var(--s-current)"},
         ],
         "data": [{
             "label": s["label"],
-            "values": {"fy26": s["fy26"], "fy27": s["fy27"]},
-            "items": {"fy26": s["items26"], "fy27": s["items27"]},
+            "values": {"y25": s["y25"], "y26": s["y26"]},
+            "items": {"y25": s["items25"], "y26": s["items26"]},
             "note": signed(s["change"]) if s["change"] is not None else "new",
             "noteColor": "#8c2417" if (s["change"] or 0) < 0 else "#1f6b44",
         } for s in hus["sites"]],
@@ -732,10 +741,10 @@ def build_html(data):
         }],
     })
     sar = next(s for s in hus["sites"] if s["label"] == "Hospital Umum Sarawak")
-    state26 = sum(s["fy26"] for s in hus["sites"])
-    state27 = sum(s["fy27"] for s in hus["sites"])
+    state25 = sum(s["y25"] for s in hus["sites"])
+    state26 = sum(s["y26"] for s in hus["sites"])
     slides.append(f"""<section class="slide" data-notes="Interim tender achievement. Sarawak as a state is up on units; HUS is the largest site but the only one moving backwards. Hover a site bar to see which lines moved.">
-{head("Interim tender achievement", "Transfusion units, May&ndash;Aug FY26 vs FY27 &middot; Sarawak against other states", logo)}
+{head("Interim tender achievement", "Transfusion units, May&ndash;Aug 2025 vs 2026 &middot; Sarawak against other states", logo)}
   <div class="body" style="display:grid;grid-template-columns:1fr 1.1fr;gap:48px;padding-bottom:24px">
     <div class="chart" id="c-tender">
       <div class="chart-top">
@@ -744,11 +753,11 @@ def build_html(data):
     </div>
     <div style="display:flex;flex-direction:column;gap:24px;min-height:0">
       <div class="kpis" style="grid-template-columns:1fr 1fr;flex:none">
-        {kpi("Sarawak state", f"{signed(pct(state27, state26))}",
-             f"{n(state26)} &rarr; {n(state27)} units",
-             subcls="good" if state27 >= state26 else "bad")}
+        {kpi("Sarawak state", f"{signed(pct(state26, state25))}",
+             f"{n(state25)} &rarr; {n(state26)} units",
+             subcls="good" if state26 >= state25 else "bad")}
         {kpi("Hospital Umum Sarawak", f"{signed(sar['change'])}",
-             f"{n(sar['fy26'])} &rarr; {n(sar['fy27'])} units", cls="tint",
+             f"{n(sar['y25'])} &rarr; {n(sar['y26'])} units", cls="tint",
              subcls="bad" if sar["change"] < 0 else "good")}
       </div>
       <div class="chart" id="c-hus-sites">
@@ -780,7 +789,7 @@ def build_html(data):
                 "cards": c["items"],
                 "other": [i for i in p["items"] if i["name"] not in card_names],
             },
-            "sub": p["fy"] + (" · prior year" if p["fy"] == "FY26" else ""),
+            "sub": "Calendar 2026",
         })
     charts.append({
         "id": "c-hus-months", "unit": "units", "stacked": True, "height": 300,
@@ -812,7 +821,7 @@ def build_html(data):
       <div class="note">
         <div class="label">Everything else, month by month</div>
         <p>Cells, reagent and QC were invoiced in every one of the six months &mdash;
-           the bench is as busy as last year.</p>
+           routine bench work never paused.</p>
       </div>
       <div class="note dark">
         <div class="label">Ask</div>
@@ -820,7 +829,7 @@ def build_html(data):
       </div>
     </div>
   </div>
-{foot("March and April fall in FY26; May onwards in FY27.")}
+{foot("All six months fall in calendar 2026.")}
 </section>""")
 
     # ---------- 04 PIL tests ----------
@@ -828,30 +837,30 @@ def build_html(data):
         "id": "c-pil-assay", "horizontal": True, "unit": "tests",
         "categoryLabel": "Assay", "gutter": 340,
         "series": [
-            {"key": "fy26", "name": "FY26 full year", "color": "var(--s-prior)"},
-            {"key": "fy27", "name": "FY27 YTD (May–Aug)", "color": "var(--s-current)"},
+            {"key": "y25", "name": "2025 (May–Dec)", "color": "var(--s-prior)"},
+            {"key": "y26", "name": "2026 YTD (Jan–Aug)", "color": "var(--s-current)"},
         ],
         "data": [{
             "label": a["label"],
-            "values": {"fy26": a["fy26"], "fy27": a["fy27"]},
-            "items": {"fy26": a["items26"], "fy27": a["items27"]},
+            "values": {"y25": a["y25"], "y26": a["y26"]},
+            "items": {"y25": a["items25"], "y26": a["items26"]},
             "sub": f"{a['size']} tests per kit",
         } for a in pil["by_assay"]],
     })
-    pil_delta = pct(pil["lfl27_tests"], pil["lfl26_tests"])
+    pil_delta = pct(pil["y26_tests"], pil["y25_tests"])
     hp = next(a for a in pil["by_assay"] if a["label"].startswith("H. pylori"))
-    slides.append(f"""<section class="slide" data-notes="Frame this in tests, not ringgit. 14,650 tests last year; 2,550 in four months. H. pylori is the collapse. Hover a bar to see the kit count behind the test number.">
+    slides.append(f"""<section class="slide" data-notes="Frame this in tests, not ringgit. 13,250 tests in the last eight months of 2025; 3,950 in the first eight of 2026. H. pylori is the collapse — ANA Screen is flat. Hover a bar to see the kit count behind the test number.">
 {head("Premier Integrated Labs &mdash; Kuching",
       "Timberland Medical Centre &middot; SNIBE Maglumi tests purchased", logo)}
   <div class="body">
     <div class="kpis">
-      {kpi("FY26 full year", n(pil['fy26_tests']),
-           f"tests purchased &middot; {n(pil['fy26_kits'])} reagent kits")}
-      {kpi("FY27 &middot; May&ndash;Aug", n(pil['fy27_tests']),
-           f"{signed(pil_delta)} vs {n(pil['lfl26_tests'])} in the same four months",
+      {kpi(Y25, n(pil['y25_tests']),
+           f"tests &middot; {n(pil['y25_kits'])} kits &rarr; {n(pil['y26_kits'])} in 2026")}
+      {kpi(Y26, n(pil['y26_tests']),
+           f"{signed(pil_delta)} on the same eight-month span",
            subcls="bad" if pil_delta < 0 else "good")}
-      {kpi("H. pylori kits", f"{n(hp['kits26'])} &rarr; {n(hp['kits27'])}",
-           "FY26 full year &rarr; FY27 YTD", cls="tint", subcls="bad")}
+      {kpi("H. pylori kits", f"{n(hp['kits25'])} &rarr; {n(hp['kits26'])}",
+           "2025 &rarr; 2026 YTD", cls="tint", subcls="bad")}
     </div>
     <div style="display:grid;grid-template-columns:1.35fr 1fr;gap:44px;min-height:0;flex:1;padding-bottom:24px">
       <div class="chart" id="c-pil-assay">
@@ -862,11 +871,11 @@ def build_html(data):
       </div>
       <div class="read">
         <div class="label">What they run on the Maglumi</div>
-        <p>Three CLIA assays only. <strong>H. pylori IgG</strong> carried the platform last
-           year and has all but stopped; EBV is the one line still ordering to pace.</p>
+        <p>Three CLIA assays only. <strong>H. pylori IgG</strong> carried the platform in 2025
+           and has all but stopped; ANA Screen is flat and EBV is down by roughly a third.</p>
         <dl>
-          <div><dt>H. pylori tests, FY26 &rarr; FY27 YTD</dt>
-               <dd style="color:var(--bad)">{n(hp['fy26'])} &rarr; {n(hp['fy27'])}</dd></div>
+          <div><dt>H. pylori tests, 2025 &rarr; 2026 YTD</dt>
+               <dd style="color:var(--bad)">{n(hp['y25'])} &rarr; {n(hp['y26'])}</dd></div>
           <div><dt>Consumable lines invoiced at RM 0</dt><dd>{pil['free_lines']}</dd></div>
         </dl>
         <p style="font-size:24px;font-weight:400;color:var(--ink-muted)">Reaction cups, starter
@@ -887,7 +896,7 @@ def build_html(data):
         "data": [{
             "label": p["label"], "values": {"v": p["value"]},
             "items": {"v": p["items"]},
-            "sub": p["fy"] + (" · prior year" if p["fy"] == "FY26" else ""),
+            "sub": "Calendar 2026",
         } for p in pil["monthly"]],
     })
     vals = [p["value"] for p in pil["monthly"]]
@@ -933,12 +942,13 @@ def build_html(data):
     <div class="asks">
       <div>
         <h2>Hospital Umum Sarawak</h2>
-        {ask(1, f"Gel cards are the whole gap &mdash; {n(hus['cards26'])} units last year, "
-                f"{n(hus['cards27'])} so far. Stock on hand, or a requisition still in process?")}
-        {ask(2, "Cells, reagent and QC were ordered in every month without a break &mdash; "
-                "the bench is as busy as last year.")}
-        {ask(3, f"Sarawak as a state is {signed(pct(state27, state26))} on units while HUS is "
-                f"{signed(sar['change'])}. Sibu and Miri have taken the growth.")}
+        {ask(1, f"Gel cards are {signed(cards_delta)} across matched eight-month windows "
+                f"({n(hus['cards25'])} &rarr; {n(hus['cards26'])}), and none since June. Stock "
+                "on hand, or a requisition still in process?")}
+        {ask(2, "Reagent and QC are the two lines still growing &mdash; the bench is busy, "
+                "so this is an ordering-pattern question, not a workload one.")}
+        {ask(3, f"Sarawak as a state is {signed(pct(state26, state25))} on May&ndash;Aug units "
+                f"while HUS is {signed(sar['change'])}. Sibu and Miri have taken the growth.")}
         <div class="leave">
           <div class="label">Leave with</div>
           <p>A date for the next gel card requisition, and current card stock levels.</p>
@@ -946,7 +956,7 @@ def build_html(data):
       </div>
       <div>
         <h2>Premier Integrated Labs &mdash; Kuching</h2>
-        {ask(1, f"H. pylori went from {n(hp['kits26'])} kits to {n(hp['kits27'])}. Has the "
+        {ask(1, f"H. pylori went from {n(hp['kits25'])} kits to {n(hp['kits26'])}. Has the "
                 "workload moved, or has demand simply fallen away?")}
         {ask(2, "Ordering is small-batch and uneven &mdash; would a standing quarterly "
                 "schedule suit the lab better?")}
